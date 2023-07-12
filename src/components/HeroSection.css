@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.fade-enter {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  .fade-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 500ms, transform 500ms;
+  }
+.bebas-neue {
+  font-family: 'Bebas Neue', cursive;
+}
+
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.typing-animation::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0.2em;
+  background-color: white;
+  animation: typing 3s steps(40, end) infinite;
+}

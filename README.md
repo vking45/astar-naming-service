@@ -1,2 +1,2 @@
 # astar-naming-service
-An Astar Unstoppable Grant Initiative
+An Astar Unstoppable Grants Initiative

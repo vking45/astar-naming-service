@@ -1,4 +1,4 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(feature = "std"), no_std, no_main)]
 
 #[ink::contract]
 pub mod naming_service {
@@ -6,20 +6,12 @@ pub mod naming_service {
     use ink::storage::Mapping;
     use ink::prelude::vec::Vec;
 
-    const MAX_DAYS: u64 = 365 * 5;
-
     #[ink(event)]
     pub struct DomainRegistered {
         #[ink(topic)]
         name: Vec<u8>,
         #[ink(topic)]
         owner: AccountId,
-    }
-
-    #[ink(event)]
-    pub struct DomainDeregistered {
-        #[ink(topic)]
-        name: Vec<u8>,
     }
 
     #[ink(event)]
@@ -45,8 +37,6 @@ pub mod naming_service {
     )]
     pub struct DomainInfo {
         owner: AccountId,
-        image: Vec<u8>,
-        expiration: Timestamp,
     }
     
     #[derive(scale::Decode, scale::Encode, Clone)]
@@ -102,107 +92,56 @@ pub mod naming_service {
     pub struct NamingService {
         domains: Mapping<Vec<u8>, DomainInfo>,
         auctions: Mapping<Vec<u8>, Auction>,
-        suffixes: Vec<Vec<u8>>,
         dao_treasury: AccountId,
     }
 
     impl NamingService {
         #[ink(constructor)]
         pub fn new(dao_treasury: AccountId) -> Self {
-            let mut suffixes = Vec::new();
-            suffixes.push(".kbtc".as_bytes().to_vec());
-            suffixes.push(".kint".as_bytes().to_vec());
             let domains = Mapping::default();
             let auctions = Mapping::default();
             Self {
                 domains,
                 auctions,
-                suffixes,
                 dao_treasury,
             }
         }
 
         #[ink(message, payable)]
-        pub fn register_domain(&mut self, name: Vec<u8>, suffix_idx: u32, days: u64, image: Vec<u8>) -> bool {
-            let base = 100000000;
-            if suffix_idx >= self.suffixes.len() as u32 {
-                return false;
-            }
+        pub fn register_domain(&mut self, name: Vec<u8>, suffix_idx: u32) -> bool {
+            
+            let base = 200_000_000_000_000_000_000;
             
             let value = self.env().transferred_value(); 
-            let fee = days as Balance;
-            
-            if days > MAX_DAYS || days < 1 {
-                return false;
-            }
 
             if !Self::is_valid_domain_name(&name) || name.len() < 3 {
                 return false;
             }
 
-            let suffix = self.suffixes.get(suffix_idx as usize).unwrap().clone();
+            let suffix = ".star"
             let full_name = [&name[..], &suffix[..]].concat();
             let caller = self.env().caller();
             
 
-            if self.domains.contains(&full_name) || value < fee * base
+            if self.domains.contains(&full_name) || value < base
             {
                 return false;
             }
-
-            let expiration = self.env().block_timestamp() + (days * 86_400_000);
 
             self.domains.insert(
                 full_name.clone(),
                 &DomainInfo {
                     owner : caller,
-                    image,
-                    expiration,
                 },
             );  
 
             self.env().emit_event(DomainRegistered { name: full_name, owner: caller });            
 
-	    if let Err(_) = self.env().transfer(self.dao_treasury, value) {
+	        if let Err(_) = self.env().transfer(self.dao_treasury, value) {
                 return false;
             }
 
             true            
-        }
-
-        #[ink(message, payable)]
-        pub fn renew_domain(&mut self, name: Vec<u8>, days: u64) -> bool {
-	    let base = 100000000;
-            if days > MAX_DAYS || days < 1 {
-                return false;
-            }
-            
-            let value = self.env().transferred_value(); 
-            let fee = days as Balance;
-            
-            if value  < fee * base {
-            	return false;
-            }
-            
-            if let Err(_) = self.env().transfer(self.dao_treasury, value) {
-                return false;
-            }                    
-                   
-
-	    if let Some(mut domain_info) = self.domains.take(&name) {
-                if domain_info.owner == self.env().caller() {                  
-                    domain_info.expiration += (days * 86_400_000);                   
-                    self.domains.insert(name, &domain_info); 
-                    return true;
-                }
-                
-                return false;
-                
-            } 
-            else {
-            
-            	return false;
-            }
         }
 
         #[ink(message)]
@@ -227,20 +166,7 @@ pub mod naming_service {
                 }
             }
             false
-        }
-
-        #[ink(message)]
-        pub fn deregister_domain(&mut self, name: Vec<u8>) -> bool {
-            if let Some(domain_info) = self.domains.take(&name) {
-                let current_time = self.env().block_timestamp();
-                if domain_info.expiration <= current_time {
-                    self.domains.remove(&name);
-                    self.env().emit_event(DomainDeregistered { name: name.clone() });
-                    return true;
-                }
-            }
-            false
-        }        
+        }     
         
         #[ink(message)]
         pub fn get_domain_info(&self, name: Vec<u8>) -> Option<DomainInfo> {
@@ -338,18 +264,6 @@ pub mod naming_service {
             false
         }
         
-	#[ink(message)]
-	pub fn update_image(&mut self, name: Vec<u8>, new_image: Vec<u8>) -> bool {
-	    if let Some(mut domain_info) = self.domains.take(&name) {
-		let caller = self.env().caller();
-		if domain_info.owner == caller {
-		    domain_info.image = new_image;
-		    self.domains.insert(name, &domain_info);
-		    return true;
-		}
-	    }
-	    false
-	}
 	
         #[ink(message)]
         pub fn get_auction_info(&self, name: Vec<u8>) -> Option<Auction> {

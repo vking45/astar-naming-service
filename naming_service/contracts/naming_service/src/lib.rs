@@ -62,7 +62,7 @@ pub mod naming_service {
             
             let value = self.env().transferred_value(); 
 
-            if !Self::is_valid_domain_name(&name) || name.len() < 3 {
+            if !Self::is_valid_domain_name(&name) {
                 return false;
             }
 
@@ -117,11 +117,12 @@ pub mod naming_service {
         }
         
         pub fn is_valid_domain_name(name: &[u8]) -> bool {
-            let max_length: usize = 25;
+            let min_length: usize = 1;
+            let max_length: usize = 20;
             let allowed_chars: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
         
             // Check if the domain name exceeds the maximum allowed length
-            if name.len() > max_length {
+            if name.len() < min_length || name.len() > max_length {
                 return false;
             }
         

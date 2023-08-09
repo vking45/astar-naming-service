@@ -43,15 +43,18 @@ pub mod naming_service {
     pub struct NamingService {
         domains: Mapping<Vec<u8>, DomainInfo>,
         dao_treasury: AccountId,
+        reverse_domains : Mapping<AccountId, Vec<Vec<u8>>>,
     }
 
     impl NamingService {
         #[ink(constructor)]
         pub fn new(dao_treasury: AccountId) -> Self {
             let domains = Mapping::default();
+            let reverse_domains = Mapping::default(); 
             Self {
                 domains,
                 dao_treasury,
+                reverse_domains,
             }
         }
 
@@ -62,7 +65,7 @@ pub mod naming_service {
             
             let value = self.env().transferred_value(); 
 
-            if !Self::is_valid_domain_name(&name) {
+            if !Self::is_valid_domain_name(&name) || name.len() < 3 {
                 return false;
             }
 
@@ -83,6 +86,11 @@ pub mod naming_service {
                 },
             );  
 
+            let domain_list = self.reverse_domains.get(&caller).unwrap_or(Vec::new()).clone();
+            let mut updated_list = domain_list.clone();
+            updated_list.push(full_name.clone());
+            self.reverse_domains.insert(caller, &updated_list);
+
             self.env().emit_event(DomainRegistered { name: full_name, owner: caller });            
 
 	        if let Err(_) = self.env().transfer(self.dao_treasury, value) {
@@ -100,6 +108,19 @@ pub mod naming_service {
                 if domain_info.owner == caller {
                     domain_info.owner = new_owner;
                     self.domains.insert(name.clone(), &domain_info);
+
+                    let mut current_owner_domains = self.reverse_domains.get(&caller).unwrap_or(Vec::new()).clone();
+                    current_owner_domains.retain(|domain| domain != &name);
+                    if current_owner_domains.is_empty() {
+                        self.reverse_domains.remove(&caller);
+                    } else {
+                        self.reverse_domains.insert(caller, &current_owner_domains);
+                    }
+
+                    let mut new_owner_domains = self.reverse_domains.get(&new_owner).unwrap_or(Vec::new()).clone();
+                    new_owner_domains.push(name.clone());
+                    self.reverse_domains.insert(new_owner, &new_owner_domains);
+
                     self.env().emit_event(DomainTransferred {
                         name: name.clone(),
                         from: caller,
@@ -115,14 +136,18 @@ pub mod naming_service {
         pub fn get_domain_info(&self, name: Vec<u8>) -> Option<DomainInfo> {
             self.domains.get(name)
         }
+
+        #[ink(message)]
+        pub fn get_domains_by_owner(&self, owner : AccountId) -> Vec<Vec<u8>> {
+            self.reverse_domains.get(&owner).unwrap_or(Vec::new()).clone()
+        }
         
         pub fn is_valid_domain_name(name: &[u8]) -> bool {
-            let min_length: usize = 1;
-            let max_length: usize = 20;
+            let max_length: usize = 25;
             let allowed_chars: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";
         
             // Check if the domain name exceeds the maximum allowed length
-            if name.len() < min_length || name.len() > max_length {
+            if name.len() > max_length {
                 return false;
             }
         

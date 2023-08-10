@@ -37,6 +37,7 @@ pub mod naming_service {
     )]
     pub struct DomainInfo {
         owner: AccountId,
+        url: Option<Vec<u8>>,
     }
 
     #[ink(storage)]
@@ -83,8 +84,9 @@ pub mod naming_service {
                 full_name.clone(),
                 &DomainInfo {
                     owner : caller,
+                    url : None,
                 },
-            );  
+            );
 
             let domain_list = self.reverse_domains.get(&caller).unwrap_or(Vec::new()).clone();
             let mut updated_list = domain_list.clone();
@@ -141,6 +143,27 @@ pub mod naming_service {
         pub fn get_domains_by_owner(&self, owner : AccountId) -> Vec<Vec<u8>> {
             self.reverse_domains.get(&owner).unwrap_or(Vec::new()).clone()
         }
+
+        #[ink(message)]
+        pub fn set_domain_url(&mut self, name: Vec<u8>, url: Vec<u8>) -> bool {
+            if let Some(mut domain_info) = self.domains.get(&name) {
+                if domain_info.owner == self.env().caller() {
+                    domain_info.url = Some(url);
+                    self.domains.insert(name, &domain_info);
+                    return true;
+                }
+            }
+            false
+        }
+
+        #[ink(message)]
+        pub fn get_domain_url(&self, name: Vec<u8>) -> Option<Vec<u8>> {
+            if let Some(domain_info) = self.domains.get(&name) {
+                return domain_info.url.clone();
+            }
+            None
+        }
+
         
         pub fn is_valid_domain_name(name: &[u8]) -> bool {
             let max_length: usize = 25;

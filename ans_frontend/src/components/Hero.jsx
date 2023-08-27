@@ -28,7 +28,7 @@ const Hero = () => {
       </div>
 
       <div className={`flex-1 flex ${styles.flexCenter} flex-col md:my-0 my-10 relative`}>
-        <img src={heroImage} alt="" className='w-[20%] h-[25%] relative z-[5] mb-5'/>
+        {/* <img src={heroImage} alt="" className='w-[20%] h-[25%] relative z-[5] mb-5'/> */}
 
         <div className='absolute z-[0] w-[40%] h-[35%] top-0 pink__gradient'></div>
         <div className='absolute z-[0] w-[80%] h-[85%] rounded-full bottom-40 white__gradient'></div>

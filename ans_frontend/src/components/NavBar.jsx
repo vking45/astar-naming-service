@@ -7,7 +7,7 @@ const NavBar = () => {
 
   return (
     <nav className='w-full flex py-6 justify-between items-center navbar'>
-      <h3 className='w-[124px] h-[32px] text-white'>ENS</h3>
+      <h3 className='w-[124px] h-[32px] font-bold text-gradient'>ENS</h3>
 
       <ul className='list-none sm:flex hidden justify-end items-center flex-1'>
         {

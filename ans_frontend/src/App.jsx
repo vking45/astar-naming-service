@@ -1,6 +1,7 @@
 import NavBar from './components/NavBar.jsx';
 import Hero from './components/Hero.jsx';
 import styles from './styles.js';
+import Faqs from './components/Faqs.jsx';
 
 const App = () => {
   return (
@@ -19,10 +20,11 @@ const App = () => {
 
       <div className={`bg-primary ${styles.paddingX} ${styles.flexStart}`}>
         <div className={`${styles.boxWidth}`}>
-          Features
+          {/* Features
           How It Works
           FAQs
-          Footer
+          Footer */}
+          <Faqs />
         </div>
       </div>
     </div>

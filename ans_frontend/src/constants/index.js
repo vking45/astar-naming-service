@@ -17,6 +17,34 @@ export const navLinks = [
   },
 ];
 
+export const questions = [
+  {
+    id: 1,
+    question: 'What is Polkadot Naming Service?',
+    answer: 'Polkadot Naming Service is a decentralized domain name system built on the Polkadot network, providing an easy-to-use interface for managing domain names.',
+  },
+  {
+    id: 2,
+    question: 'How do I register a domain?',
+    answer: 'To register a domain, search for the desired domain using our search bar and follow the registration process. After completing the payment, your domain will be registered.',
+  },
+  {
+    id: 3,
+    question: 'What are the benefits of using Polkadot Naming Service?',
+    answer: 'Using Polkadot Naming Service offers a number of benefits, such as increased security, censorship resistance, and easy integration with blockchain-based applications.',
+  },
+  {
+    id: 4,
+    question: 'Can I transfer my domain to another owner?',
+    answer: 'Yes, you can transfer your domain to another owner by following the domain transfer process on our platform. This ensures a secure and transparent transfer of ownership.',
+  },
+  {
+    id: 5,
+    question: 'How do I link my domain to an IPFS hash?',
+    answer: 'To link your domain to an IPFS hash, you can use the Polkadot Naming Service dashboard to configure your domain settings and input the IPFS hash you want to link it to.',
+  },
+];
+
 // export const features = [
 //   {
 //     id: "feature-1",

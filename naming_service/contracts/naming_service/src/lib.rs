@@ -38,6 +38,7 @@ pub mod naming_service {
     pub struct DomainInfo {
         owner: AccountId,
         url: Option<Vec<u8>>,
+        eth_address: Option<AccountId>,
     }
 
     #[ink(storage)]
@@ -85,6 +86,7 @@ pub mod naming_service {
                 &DomainInfo {
                     owner : caller,
                     url : None,
+                    eth_address : None,
                 },
             );
 
@@ -164,7 +166,26 @@ pub mod naming_service {
             None
         }
 
-        
+        #[ink(message)]
+        pub fn set_domain_eth_address(&mut self, name: Vec<u8>, eth_address: AccountId) -> bool {
+            if let Some(mut domain_info) = self.domains.take(&name) {
+                if domain_info.owner == self.env().caller() {
+                    domain_info.eth_address = Some(eth_address);
+                    self.domains.insert(name, &domain_info);
+                    return true;
+                }
+            }
+            false
+        }
+
+        #[ink(message)]
+        pub fn get_domain_eth_address(&self, name: Vec<u8>) -> Option<AccountId> {
+            if let Some(domain_info) = self.domains.get(&name) {
+                return domain_info.eth_address;
+            }
+            None
+        }
+
         pub fn is_valid_domain_name(name: &[u8]) -> bool {
             let max_length: usize = 25;
             let allowed_chars: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-";

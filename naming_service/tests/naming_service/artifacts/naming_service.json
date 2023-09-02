@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x9120049c72eca9f866748f651a47767e60d1c09eb1dce7c949367e22759fcf60",
+    "hash": "0x3e2a5a1df8f62ce0fa711c632003d7d222ab2332218dcd0bb54b9f838e4f558f",
     "language": "ink! 4.2.1",
     "compiler": "rustc 1.69.0-nightly",
     "build_info": {
@@ -60,32 +60,32 @@
         "displayName": [
           "Balance"
         ],
-        "type": 16
+        "type": 18
       },
       "blockNumber": {
         "displayName": [
           "BlockNumber"
         ],
-        "type": 19
+        "type": 21
       },
       "chainExtension": {
         "displayName": [
           "ChainExtension"
         ],
-        "type": 20
+        "type": 22
       },
       "hash": {
         "displayName": [
           "Hash"
         ],
-        "type": 17
+        "type": 19
       },
       "maxEventTopics": 4,
       "timestamp": {
         "displayName": [
           "Timestamp"
         ],
-        "type": 18
+        "type": 20
       }
     },
     "events": [
@@ -274,7 +274,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 14
+          "type": 15
         },
         "selector": "0x89870069"
       },
@@ -335,9 +335,70 @@
             "ink",
             "MessageResult"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0xe711b065"
+      },
+      {
+        "args": [
+          {
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "eth_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "set_domain_eth_address",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 8
+        },
+        "selector": "0x7bcf1f63"
+      },
+      {
+        "args": [
+          {
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "get_domain_eth_address",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 17
+        },
+        "selector": "0xdf5a3f4a"
       }
     ]
   },
@@ -389,6 +450,35 @@
                             }
                           },
                           "name": "url"
+                        },
+                        {
+                          "layout": {
+                            "enum": {
+                              "dispatchKey": "0xdc97da32",
+                              "name": "Option",
+                              "variants": {
+                                "0": {
+                                  "fields": [],
+                                  "name": "None"
+                                },
+                                "1": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "leaf": {
+                                          "key": "0xdc97da32",
+                                          "ty": 0
+                                        }
+                                      },
+                                      "name": "0"
+                                    }
+                                  ],
+                                  "name": "Some"
+                                }
+                              }
+                            }
+                          },
+                          "name": "eth_address"
                         }
                       ],
                       "name": "DomainInfo"
@@ -698,6 +788,11 @@
                 "name": "url",
                 "type": 13,
                 "typeName": "Option<Vec<u8>>"
+              },
+              {
+                "name": "eth_address",
+                "type": 14,
+                "typeName": "Option<AccountId>"
               }
             ]
           }
@@ -749,6 +844,39 @@
           "variant": {
             "variants": [
               {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
                 "fields": [
                   {
                     "type": 4
@@ -785,7 +913,7 @@
       }
     },
     {
-      "id": 15,
+      "id": 16,
       "type": {
         "def": {
           "variant": {
@@ -827,7 +955,49 @@
       }
     },
     {
-      "id": 16,
+      "id": 17,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 14
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 7
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 14
+          },
+          {
+            "name": "E",
+            "type": 7
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 18,
       "type": {
         "def": {
           "primitive": "u128"
@@ -835,7 +1005,7 @@
       }
     },
     {
-      "id": 17,
+      "id": 19,
       "type": {
         "def": {
           "composite": {
@@ -855,7 +1025,7 @@
       }
     },
     {
-      "id": 18,
+      "id": 20,
       "type": {
         "def": {
           "primitive": "u64"
@@ -863,7 +1033,7 @@
       }
     },
     {
-      "id": 19,
+      "id": 21,
       "type": {
         "def": {
           "primitive": "u32"
@@ -871,7 +1041,7 @@
       }
     },
     {
-      "id": 20,
+      "id": 22,
       "type": {
         "def": {
           "variant": {}

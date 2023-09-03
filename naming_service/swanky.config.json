@@ -37,6 +37,11 @@
       "name": "naming_service",
       "moduleName": "naming_service",
       "deployments": []
+    },
+    "treasury_dao": {
+      "name": "treasury_dao",
+      "moduleName": "treasury_dao",
+      "deployments": []
     }
   }
 }

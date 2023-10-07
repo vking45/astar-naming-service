@@ -24,6 +24,32 @@ pub mod naming_service {
         to: AccountId,
     }
 
+    #[ink(event)]
+    pub struct DomainListed {
+        #[ink(topic)]
+        name: Vec<u8>,
+        #[ink(topic)]
+        seller: AccountId,
+        #[ink(topic)]
+        price: Balance,
+    }
+
+    #[ink(event)]
+    pub struct DomainDeListed {
+        #[ink(topic)]
+        name: Vec<u8>,
+    }
+
+    #[ink(event)]
+    pub struct DomainPurchased {
+        #[ink(topic)]
+        name: Vec<u8>,
+        #[ink(topic)]
+        new_owner: AccountId,
+        #[ink(topic)]
+        price: Balance,
+    }
+
     #[derive(scale::Decode, scale::Encode)]
     #[cfg_attr(
         feature = "std",
@@ -39,11 +65,30 @@ pub mod naming_service {
         owner: AccountId,
         url: Option<Vec<u8>>,
         eth_address: Option<AccountId>,
+        transferrable: bool,
+    }
+
+    #[derive(scale::Decode, scale::Encode)]
+    #[cfg_attr(
+        feature = "std",
+        derive(
+            Debug,
+            PartialEq,
+            Eq,
+            scale_info::TypeInfo,
+            ink::storage::traits::StorageLayout
+        )
+    )]
+    pub struct DomainListing {
+        domain_name: Vec<u8>,
+        seller: AccountId,
+        price: Balance,
     }
 
     #[ink(storage)]
     pub struct NamingService {
         domains: Mapping<Vec<u8>, DomainInfo>,
+        listings: Mapping<Vec<u8>, DomainListing>,
         dao_treasury: AccountId,
         reverse_domains : Mapping<AccountId, Vec<Vec<u8>>>,
     }
@@ -53,8 +98,10 @@ pub mod naming_service {
         pub fn new(dao_treasury: AccountId) -> Self {
             let domains = Mapping::default();
             let reverse_domains = Mapping::default(); 
+            let listings = Mapping::default(); 
             Self {
                 domains,
+                listings,
                 dao_treasury,
                 reverse_domains,
             }
@@ -87,6 +134,7 @@ pub mod naming_service {
                     owner : caller,
                     url : None,
                     eth_address : None,
+                    transferrable : true,
                 },
             );
 
@@ -109,7 +157,7 @@ pub mod naming_service {
         
             if let Some(mut domain_info) = self.domains.take(&name) {
                 let caller = self.env().caller();
-                if domain_info.owner == caller {
+                if domain_info.owner == caller && domain_info.transferrable == true {
                     domain_info.owner = new_owner;
                     self.domains.insert(name.clone(), &domain_info);
 
@@ -185,6 +233,78 @@ pub mod naming_service {
             }
             None
         }
+
+        #[ink(message, payable)]
+        pub fn list_domain_for_sale(&mut self, name: Vec<u8>, price: Balance) -> bool {
+            let caller = self.env().caller();
+            if let Some(domain_info) = self.domains.get(&name) {
+                if domain_info.owner == caller && domain_info.transferrable == true {
+                    let listing = DomainListing {
+                        domain_name: name.clone(),
+                        seller: caller,
+                        price,
+                    };
+                    domain_info.transferrable = false;
+                    self.domains.insert(name.clone(), &domain_info);
+                    self.listings.insert(name.clone(), &listing);
+                    self.env().emit_event(DomainListed { name, seller: caller, price });
+                    return true;
+                }
+            }
+            false
+        }
+
+        #[ink(message, payable)]
+        pub fn purchase_domain(&mut self, name: Vec<u8>) -> bool {
+            let caller = self.env().caller();
+            let sent_amount = self.env().transferred_value();
+    
+            if let Some(mut domain_info) = self.domains.take(&name) {
+                if let Some(mut listing) = self.listings.take(&name) {
+                    if domain_info.transferrable == false && sent_amount == listing.price {
+                        let previous_owner = domain_info.owner;
+                        domain_info.owner = caller;
+                        domain_info.transferrable = true;
+                        self.domains.insert(name.clone(), &domain_info);
+                        self.listings.remove(&name);
+
+                        let mut current_owner_domains = self.reverse_domains.get(&previous_owner).unwrap_or(Vec::new()).clone();
+                        current_owner_domains.retain(|domain| domain != &name);
+                        if current_owner_domains.is_empty() {
+                            self.reverse_domains.remove(&previous_owner);
+                        } else {
+                            self.reverse_domains.insert(previous_owner, &current_owner_domains);
+                        }
+    
+                        let mut new_owner_domains = self.reverse_domains.get(&caller).unwrap_or(Vec::new()).clone();
+                        new_owner_domains.push(name.clone());
+                        self.reverse_domains.insert(caller, &new_owner_domains);
+
+                        self.env().emit_event(DomainPurchased { name, new_owner: caller, price: sent_amount });
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+
+        #[ink(message)]
+        pub fn remove_domain_listing(&mut self, name: Vec<u8>) -> bool {
+            let caller = self.env().caller();
+            if let Some(listing) = self.listings.get(&name) {
+                if let Some(mut domain_info) = self.domains.take(&name) {
+                    if listing.seller == caller && domain_info.transferrable == false {
+                        domain_info.transferrable = true;
+                        self.domains.insert(name.clone(), &domain_info);
+                        self.listings.remove(&name);
+                        self.env().emit_event(DomainDeListed { name });
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+
 
         pub fn is_valid_domain_name(name: &[u8]) -> bool {
             let max_length: usize = 25;

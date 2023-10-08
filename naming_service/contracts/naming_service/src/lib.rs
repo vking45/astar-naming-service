@@ -237,7 +237,7 @@ pub mod naming_service {
         #[ink(message, payable)]
         pub fn list_domain_for_sale(&mut self, name: Vec<u8>, price: Balance) -> bool {
             let caller = self.env().caller();
-            if let Some(domain_info) = self.domains.get(&name) {
+            if let Some(mut domain_info) = self.domains.get(&name) {
                 if domain_info.owner == caller && domain_info.transferrable == true {
                     let listing = DomainListing {
                         domain_name: name.clone(),
@@ -260,7 +260,7 @@ pub mod naming_service {
             let sent_amount = self.env().transferred_value();
     
             if let Some(mut domain_info) = self.domains.take(&name) {
-                if let Some(mut listing) = self.listings.take(&name) {
+                if let Some(listing) = self.listings.take(&name) {
                     if domain_info.transferrable == false && sent_amount == listing.price {
                         let previous_owner = domain_info.owner;
                         domain_info.owner = caller;

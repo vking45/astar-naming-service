@@ -1,7 +1,7 @@
 {
   "source": {
-    "hash": "0xd36a99f1d3780ad6269f2fb7619aca35ea5623a317e94e3012624181bd347674",
-    "language": "ink! 4.2.1",
+    "hash": "0xa1ba814647d6bc1bbba21cae486af9a6c6f4b0f1717aa9c4b41f24f1ed404a44",
+    "language": "ink! 4.3.0",
     "compiler": "rustc 1.69.0-nightly",
     "build_info": {
       "build_mode": "Debug",
@@ -43,7 +43,7 @@
             "ink_primitives",
             "ConstructorResult"
           ],
-          "type": 5
+          "type": 7
         },
         "selector": "0x9bae9d5e"
       }
@@ -60,7 +60,7 @@
         "displayName": [
           "Balance"
         ],
-        "type": 18
+        "type": 5
       },
       "blockNumber": {
         "displayName": [
@@ -155,6 +155,101 @@
         ],
         "docs": [],
         "label": "DomainTransferred"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "seller",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "price",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [],
+        "label": "DomainListed"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "docs": [],
+        "label": "DomainDeListed"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "new_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "price",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [],
+        "label": "DomainPurchased"
       }
     ],
     "lang_error": {
@@ -162,7 +257,7 @@
         "ink",
         "LangError"
       ],
-      "type": 7
+      "type": 9
     },
     "messages": [
       {
@@ -187,7 +282,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 8
+          "type": 10
         },
         "selector": "0x391c40cf"
       },
@@ -222,7 +317,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 8
+          "type": 10
         },
         "selector": "0xc02f92a1"
       },
@@ -248,7 +343,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 10
+          "type": 11
         },
         "selector": "0xa1b53b8b"
       },
@@ -274,7 +369,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 15
+          "type": 16
         },
         "selector": "0x89870069"
       },
@@ -309,7 +404,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 8
+          "type": 10
         },
         "selector": "0x72d2c382"
       },
@@ -335,7 +430,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 16
+          "type": 17
         },
         "selector": "0xe711b065"
       },
@@ -370,7 +465,7 @@
             "ink",
             "MessageResult"
           ],
-          "type": 8
+          "type": 10
         },
         "selector": "0x7bcf1f63"
       },
@@ -396,9 +491,96 @@
             "ink",
             "MessageResult"
           ],
-          "type": 17
+          "type": 18
         },
         "selector": "0xdf5a3f4a"
+      },
+      {
+        "args": [
+          {
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "price",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "list_domain_for_sale",
+        "mutates": true,
+        "payable": true,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 10
+        },
+        "selector": "0x8dce561d"
+      },
+      {
+        "args": [
+          {
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "purchase_domain",
+        "mutates": true,
+        "payable": true,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 10
+        },
+        "selector": "0x75224148"
+      },
+      {
+        "args": [
+          {
+            "label": "name",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "remove_domain_listing",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 10
+        },
+        "selector": "0xb7a6a8e1"
       }
     ]
   },
@@ -479,6 +661,15 @@
                             }
                           },
                           "name": "eth_address"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xdc97da32",
+                              "ty": 4
+                            }
+                          },
+                          "name": "transferrable"
                         }
                       ],
                       "name": "DomainInfo"
@@ -488,6 +679,48 @@
                 }
               },
               "name": "domains"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x7eff6510",
+                              "ty": 3
+                            }
+                          },
+                          "name": "domain_name"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x7eff6510",
+                              "ty": 0
+                            }
+                          },
+                          "name": "seller"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x7eff6510",
+                              "ty": 5
+                            }
+                          },
+                          "name": "price"
+                        }
+                      ],
+                      "name": "DomainListing"
+                    }
+                  },
+                  "root_key": "0x7eff6510"
+                }
+              },
+              "name": "listings"
             },
             {
               "layout": {
@@ -504,7 +737,7 @@
                   "layout": {
                     "leaf": {
                       "key": "0x576bc177",
-                      "ty": 4
+                      "ty": 6
                     }
                   },
                   "root_key": "0x576bc177"
@@ -573,9 +806,7 @@
       "id": 4,
       "type": {
         "def": {
-          "sequence": {
-            "type": 3
-          }
+          "primitive": "bool"
         }
       }
     },
@@ -583,12 +814,30 @@
       "id": 5,
       "type": {
         "def": {
+          "primitive": "u128"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 3
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": {
+        "def": {
           "variant": {
             "variants": [
               {
                 "fields": [
                   {
-                    "type": 6
+                    "type": 8
                   }
                 ],
                 "index": 0,
@@ -597,7 +846,7 @@
               {
                 "fields": [
                   {
-                    "type": 7
+                    "type": 9
                   }
                 ],
                 "index": 1,
@@ -609,11 +858,11 @@
         "params": [
           {
             "name": "T",
-            "type": 6
+            "type": 8
           },
           {
             "name": "E",
-            "type": 7
+            "type": 9
           }
         ],
         "path": [
@@ -622,7 +871,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 8,
       "type": {
         "def": {
           "tuple": []
@@ -630,7 +879,7 @@
       }
     },
     {
-      "id": 7,
+      "id": 9,
       "type": {
         "def": {
           "variant": {
@@ -649,56 +898,6 @@
       }
     },
     {
-      "id": 8,
-      "type": {
-        "def": {
-          "variant": {
-            "variants": [
-              {
-                "fields": [
-                  {
-                    "type": 9
-                  }
-                ],
-                "index": 0,
-                "name": "Ok"
-              },
-              {
-                "fields": [
-                  {
-                    "type": 7
-                  }
-                ],
-                "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
-        },
-        "params": [
-          {
-            "name": "T",
-            "type": 9
-          },
-          {
-            "name": "E",
-            "type": 7
-          }
-        ],
-        "path": [
-          "Result"
-        ]
-      }
-    },
-    {
-      "id": 9,
-      "type": {
-        "def": {
-          "primitive": "bool"
-        }
-      }
-    },
-    {
       "id": 10,
       "type": {
         "def": {
@@ -707,7 +906,7 @@
               {
                 "fields": [
                   {
-                    "type": 11
+                    "type": 4
                   }
                 ],
                 "index": 0,
@@ -716,7 +915,7 @@
               {
                 "fields": [
                   {
-                    "type": 7
+                    "type": 9
                   }
                 ],
                 "index": 1,
@@ -728,11 +927,11 @@
         "params": [
           {
             "name": "T",
-            "type": 11
+            "type": 4
           },
           {
             "name": "E",
-            "type": 7
+            "type": 9
           }
         ],
         "path": [
@@ -747,13 +946,55 @@
           "variant": {
             "variants": [
               {
+                "fields": [
+                  {
+                    "type": 12
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 9
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 12
+          },
+          {
+            "name": "E",
+            "type": 9
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
                 "index": 0,
                 "name": "None"
               },
               {
                 "fields": [
                   {
-                    "type": 12
+                    "type": 13
                   }
                 ],
                 "index": 1,
@@ -765,7 +1006,7 @@
         "params": [
           {
             "name": "T",
-            "type": 12
+            "type": 13
           }
         ],
         "path": [
@@ -774,7 +1015,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 13,
       "type": {
         "def": {
           "composite": {
@@ -786,13 +1027,18 @@
               },
               {
                 "name": "url",
-                "type": 13,
+                "type": 14,
                 "typeName": "Option<Vec<u8>>"
               },
               {
                 "name": "eth_address",
-                "type": 14,
+                "type": 15,
                 "typeName": "Option<AccountId>"
+              },
+              {
+                "name": "transferrable",
+                "type": 4,
+                "typeName": "bool"
               }
             ]
           }
@@ -805,7 +1051,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 14,
       "type": {
         "def": {
           "variant": {
@@ -838,7 +1084,7 @@
       }
     },
     {
-      "id": 14,
+      "id": 15,
       "type": {
         "def": {
           "variant": {
@@ -871,48 +1117,6 @@
       }
     },
     {
-      "id": 15,
-      "type": {
-        "def": {
-          "variant": {
-            "variants": [
-              {
-                "fields": [
-                  {
-                    "type": 4
-                  }
-                ],
-                "index": 0,
-                "name": "Ok"
-              },
-              {
-                "fields": [
-                  {
-                    "type": 7
-                  }
-                ],
-                "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
-        },
-        "params": [
-          {
-            "name": "T",
-            "type": 4
-          },
-          {
-            "name": "E",
-            "type": 7
-          }
-        ],
-        "path": [
-          "Result"
-        ]
-      }
-    },
-    {
       "id": 16,
       "type": {
         "def": {
@@ -921,7 +1125,7 @@
               {
                 "fields": [
                   {
-                    "type": 13
+                    "type": 6
                   }
                 ],
                 "index": 0,
@@ -930,7 +1134,7 @@
               {
                 "fields": [
                   {
-                    "type": 7
+                    "type": 9
                   }
                 ],
                 "index": 1,
@@ -942,11 +1146,11 @@
         "params": [
           {
             "name": "T",
-            "type": 13
+            "type": 6
           },
           {
             "name": "E",
-            "type": 7
+            "type": 9
           }
         ],
         "path": [
@@ -972,7 +1176,7 @@
               {
                 "fields": [
                   {
-                    "type": 7
+                    "type": 9
                   }
                 ],
                 "index": 1,
@@ -988,7 +1192,7 @@
           },
           {
             "name": "E",
-            "type": 7
+            "type": 9
           }
         ],
         "path": [
@@ -1000,8 +1204,42 @@
       "id": 18,
       "type": {
         "def": {
-          "primitive": "u128"
-        }
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 15
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 9
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 15
+          },
+          {
+            "name": "E",
+            "type": 9
+          }
+        ],
+        "path": [
+          "Result"
+        ]
       }
     },
     {
